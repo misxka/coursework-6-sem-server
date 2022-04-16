@@ -1,10 +1,13 @@
 package org.verigo.server.data.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity(name = "users")
@@ -46,9 +49,9 @@ public class User {
 //    @JoinColumn(name = "role_id", nullable = false)
 //    private Role role;
 
-//    @ManyToMany(mappedBy = "participants")
-//    @JsonIgnoreProperties("participants")
-//    private List<CourseGroup> groups = new ArrayList<>();
+    @ManyToMany(mappedBy = "participants")
+    @JsonIgnoreProperties("participants")
+    private List<Group> groups = new ArrayList<>();
 
 //    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 //    @JsonManagedReference(value = "user-results")
@@ -103,29 +106,13 @@ public class User {
         this.role = role;
     }
 
-//    public Date getCreatedAt() {
-//        return createdAt;
-//    }
-//
-//    public void setCreatedAt(Date createdAt) {
-//        this.createdAt = createdAt;
-//    }
-//
-//    public Date getUpdatedAt() {
-//        return updatedAt;
-//    }
-//
-//    public void setUpdatedAt(Date updatedAt) {
-//        this.updatedAt = updatedAt;
-//    }
-//
-//    public List<CourseGroup> getGroups() {
-//        return groups;
-//    }
-//
-//    public void setGroups(List<CourseGroup> groups) {
-//        this.groups = groups;
-//    }
+    public List<Group> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(List<Group> groups) {
+        this.groups = groups;
+    }
 //
 //    public List<UserTaskResult> getTasksResults() {
 //        return tasksResults;
@@ -142,16 +129,17 @@ public class User {
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
         return Objects.equals(id, user.id) &&
-                Objects.equals(login, user.login) &&
-                Objects.equals(password, user.password) &&
-                Objects.equals(surname, user.surname) &&
-                Objects.equals(name, user.name) &&
-                Objects.equals(role, user.role);
+            Objects.equals(login, user.login) &&
+            Objects.equals(password, user.password) &&
+            Objects.equals(surname, user.surname) &&
+            Objects.equals(name, user.name) &&
+            Objects.equals(groups, user.groups) &&
+            Objects.equals(role, user.role);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, login, password, surname, name, role);
+        return Objects.hash(id, login, password, surname, name, role, groups);
     }
 
     @Override
@@ -162,6 +150,7 @@ public class User {
             ", surname='" + surname + '\'' +
             ", name='" + name + '\'' +
             ", role='" + role + '\'' +
+            ", groups='" + groups + '\'' +
             '}';
     }
 }

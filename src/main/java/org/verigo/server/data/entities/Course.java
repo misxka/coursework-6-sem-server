@@ -1,10 +1,12 @@
 package org.verigo.server.data.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -34,9 +36,10 @@ public class Course {
 //    @JsonManagedReference
     private Set<Task> tasks = new HashSet<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="teacher_id", nullable = false)
-    private User teacher;
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("course")
+    private List<Group> groups;
+
 
     public Course() {}
 
@@ -47,9 +50,7 @@ public class Course {
         this.level = level;
         this.isOnline = isOnline;
     }
-//    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
-//    @JsonIgnoreProperties("course")
-//    private List<CourseGroup> groups;
+
 
     public Integer getId() {
         return id;
@@ -72,9 +73,9 @@ public class Course {
         return tasks;
     }
 
-//    public List<CourseGroup> getGroups() {
-//        return groups;
-//    }
+    public List<Group> getGroups() {
+        return groups;
+    }
 
     public String getLanguage() {
         return language;
@@ -82,10 +83,6 @@ public class Course {
 
     public String getLevel() {
         return level;
-    }
-
-    public User getTeacher() {
-        return teacher;
     }
 
 
@@ -109,9 +106,9 @@ public class Course {
         this.tasks = tasks;
     }
 
-//    public void setGroups(List<CourseGroup> groups) {
-//        this.groups = groups;
-//    }
+    public void setGroups(List<Group> groups) {
+        this.groups = groups;
+    }
 
     public void setLanguage(String language) {
         this.language = language;
@@ -119,10 +116,6 @@ public class Course {
 
     public void setLevel(String level) {
         this.level = level;
-    }
-
-    public void setTeacher(User teacher) {
-        this.teacher = teacher;
     }
 
 
@@ -137,12 +130,13 @@ public class Course {
             Objects.equals(isOnline, course.isOnline) &&
             Objects.equals(price, course.price) &&
             Objects.equals(tasks, course.tasks) &&
+            Objects.equals(groups, course.groups) &&
             Objects.equals(level, course.level);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, language, isOnline, price, level, tasks);
+        return Objects.hash(id, title, language, isOnline, price, level, tasks, groups);
     }
 
     @Override
@@ -155,6 +149,7 @@ public class Course {
             ", price='" + price + '\'' +
             ", level='" + level + '\'' +
             ", tasks='" + tasks + '\'' +
+            ", groups='" + groups + '\'' +
             '}';
     }
 }

@@ -26,10 +26,8 @@ public class CourseLoader implements CommandLineRunner {
     public void run(String... args) throws Exception {
         if (repository.count() == 0) {
             Course course = new Course("English Course A1", new BigDecimal(123), "Английский", "A1", false);
-            course.setTeacher(userRepository.findById(1).get());
             this.repository.save(course);
             course = new Course("English Course A2", new BigDecimal(153), "Английский", "A2", false);
-            course.setTeacher(userRepository.findById(1).get());
             this.repository.save(course);
         }
     }

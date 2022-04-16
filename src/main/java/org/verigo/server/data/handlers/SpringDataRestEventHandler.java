@@ -7,6 +7,7 @@ import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.verigo.server.data.entities.Course;
+import org.verigo.server.data.entities.Group;
 import org.verigo.server.data.entities.User;
 import org.verigo.server.data.repositories.UserRepository;
 
@@ -23,9 +24,9 @@ public class SpringDataRestEventHandler {
 
     @HandleBeforeCreate
     @HandleBeforeSave
-    public void applyUserInformationUsingSecurityContext(Course course) {
+    public void applyUserInformationUsingSecurityContext(Group group) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User owner = this.userRepository.findByLogin(login);
-        course.setTeacher(owner);
+        group.setTeacher(owner);
     }
 }
