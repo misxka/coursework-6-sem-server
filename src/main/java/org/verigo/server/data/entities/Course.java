@@ -1,6 +1,5 @@
 package org.verigo.server.data.entities;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
@@ -16,21 +15,28 @@ public class Course {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="COURSE_SEQ")
     private Integer id;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String title;
 
+    @Column( nullable = false)
     private BigDecimal price;
 
+    @Column( nullable = false)
     private String language;
 
+    @Column( nullable = false)
     private String level;
 
-    @Column(name = "is_online")
+    @Column(name = "is_online", nullable = false)
     private boolean isOnline;
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.MERGE)
 //    @JsonManagedReference
     private Set<Task> tasks = new HashSet<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="teacher_id", nullable = false)
+    private User teacher;
 
     public Course() {}
 
@@ -78,6 +84,10 @@ public class Course {
         return level;
     }
 
+    public User getTeacher() {
+        return teacher;
+    }
+
 
     public void setId(Integer id) {
         this.id = id;
@@ -110,6 +120,11 @@ public class Course {
     public void setLevel(String level) {
         this.level = level;
     }
+
+    public void setTeacher(User teacher) {
+        this.teacher = teacher;
+    }
+
 
     @Override
     public boolean equals(Object o) {

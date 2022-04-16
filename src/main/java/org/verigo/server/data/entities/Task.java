@@ -13,16 +13,16 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="TASK_SEQ")
     private Integer id;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String title;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String description;
 
-    @Column(name = "is_hometask")
+    @Column(name = "is_hometask", nullable = false)
     private boolean isHometask;
 
-    @Column(name = "max_points")
+    @Column(name = "max_points", nullable = false)
     private int maxPoints;
 
     @ManyToOne(fetch = FetchType.LAZY)
