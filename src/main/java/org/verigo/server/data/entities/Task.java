@@ -1,14 +1,16 @@
 package org.verigo.server.data.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 import java.util.Objects;
 
 @Entity(name = "tasks")
+@SequenceGenerator(name="TASK_SEQ", sequenceName="task_sequence")
 public class Task {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="TASK_SEQ")
     private Integer id;
 
     @Column(unique = true)
@@ -22,6 +24,11 @@ public class Task {
 
     @Column(name = "max_points")
     private int maxPoints;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="course_id", nullable = false)
+//    @JsonBackReference
+    private Course course;
 
     public Task() {}
 
@@ -53,6 +60,10 @@ public class Task {
         return maxPoints;
     }
 
+    public Course getCourse() {
+        return course;
+    }
+
     public void setId(Integer id) {
         this.id = id;
     }
@@ -71,6 +82,10 @@ public class Task {
 
     public void setMaxPoints(int maxPoints) {
         this.maxPoints = maxPoints;
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
     }
 
     @Override
