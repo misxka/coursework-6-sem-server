@@ -20,9 +20,9 @@ public class UserLoader implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         if (repository.count() == 0) {
-            this.repository.save(new User("teacher", "password", "Иванов", "Иван", "TEACHER"));
-            this.repository.save(new User("student1", "password", "Петров", "Иван", "STUDENT"));
-            this.repository.save(new User("student2", "password", "Сергеев", "Иван", "STUDENT"));
+            this.repository.save(new User("teacher", "password", "fakemail@mailmailmailmail.com", "Иванов Иван", "TEACHER"));
+            this.repository.save(new User("student1", "password", "fakemail@mailmailmailmail1.com", "Петров Иван", "STUDENT"));
+            this.repository.save(new User("student2", "password", "fakemail@mailmailmailmail2.com", "Сергеев Иван", "STUDENT"));
         }
     }
 }

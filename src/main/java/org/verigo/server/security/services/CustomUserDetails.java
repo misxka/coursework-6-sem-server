@@ -17,9 +17,9 @@ public class CustomUserDetails implements UserDetails {
 
     private String login;
 
-    private String surname;
+    private String email;
 
-    private String name;
+    private String fullname;
 
     private String role;
 
@@ -30,11 +30,11 @@ public class CustomUserDetails implements UserDetails {
 
     private Collection<? extends GrantedAuthority> authorities;
 
-    public CustomUserDetails(Integer id, String login, String surname, String name, String role, List<Group> groups, String password, Collection<? extends GrantedAuthority> authorities) {
+    public CustomUserDetails(Integer id, String login, String email, String fullname, String role, List<Group> groups, String password, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.login = login;
-        this.surname = surname;
-        this.name = name;
+        this.email = email;
+        this.fullname = fullname;
         this.role = role;
         this.groups = groups;
         this.password = password;
@@ -46,8 +46,8 @@ public class CustomUserDetails implements UserDetails {
         return new CustomUserDetails(
             user.getId(),
             user.getLogin(),
-            user.getSurname(),
-            user.getName(),
+            user.getEmail(),
+            user.getFullname(),
             user.getRole(),
             user.getGroups(),
             user.getPassword(),
@@ -61,11 +61,11 @@ public class CustomUserDetails implements UserDetails {
     public Integer getId() {
         return id;
     }
-    public String getSurname() {
-        return surname;
+    public String getEmail() {
+        return email;
     }
-    public String getName() {
-        return name;
+    public String getFullname() {
+        return fullname;
     }
     public String getRole() {
         return role;

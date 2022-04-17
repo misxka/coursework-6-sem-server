@@ -26,11 +26,11 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
-    private String surname;
+    @Column(unique = true, nullable = false)
+    private String email;
 
     @Column(nullable = false)
-    private String name;
+    private String fullname;
 
     @Column(nullable = false)
     private String role;
@@ -41,11 +41,11 @@ public class User {
 
     public User() {}
 
-    public User(String login, String password, String surname, String name, String role) {
+    public User(String login, String password, String email, String fullname, String role) {
         this.login = login;
         this.setPassword(password);
-        this.surname = surname;
-        this.name = name;
+        this.email = email.toLowerCase();
+        this.fullname = fullname;
         this.role = role;
     }
 
@@ -82,20 +82,20 @@ public class User {
         this.password = PASSWORD_ENCODER.encode(password);
     }
 
-    public String getName() {
-        return name;
+    public String getEmail() {
+        return email;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setEmail(String email) {
+        this.email = email.toLowerCase();
     }
 
-    public String getSurname() {
-        return surname;
+    public String getFullname() {
+        return fullname;
     }
 
-    public void setSurname(String surname) {
-        this.surname = surname;
+    public void setFullname(String surname) {
+        this.fullname = surname;
     }
 
     public String getRole() {
@@ -131,15 +131,15 @@ public class User {
         return Objects.equals(id, user.id) &&
             Objects.equals(login, user.login) &&
             Objects.equals(password, user.password) &&
-            Objects.equals(surname, user.surname) &&
-            Objects.equals(name, user.name) &&
+            Objects.equals(email, user.email) &&
+            Objects.equals(fullname, user.fullname) &&
             Objects.equals(groups, user.groups) &&
             Objects.equals(role, user.role);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, login, password, surname, name, role, groups);
+        return Objects.hash(id, login, password, email, fullname, role, groups);
     }
 
     @Override
@@ -147,8 +147,8 @@ public class User {
         return "User{" +
             "id=" + id +
             ", login='" + login + '\'' +
-            ", surname='" + surname + '\'' +
-            ", name='" + name + '\'' +
+            ", email='" + email + '\'' +
+            ", fullname='" + fullname + '\'' +
             ", role='" + role + '\'' +
             ", groups='" + groups + '\'' +
             '}';
