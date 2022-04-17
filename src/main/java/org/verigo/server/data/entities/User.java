@@ -35,6 +35,10 @@ public class User {
     @Column(nullable = false)
     private String role;
 
+    @ManyToMany(mappedBy = "participants")
+    @JsonIgnoreProperties("participants")
+    private List<Group> groups = new ArrayList<>();
+
     public User() {}
 
     public User(String login, String password, String surname, String name, String role) {
@@ -48,10 +52,6 @@ public class User {
 //    @ManyToOne
 //    @JoinColumn(name = "role_id", nullable = false)
 //    private Role role;
-
-    @ManyToMany(mappedBy = "participants")
-    @JsonIgnoreProperties("participants")
-    private List<Group> groups = new ArrayList<>();
 
 //    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 //    @JsonManagedReference(value = "user-results")
