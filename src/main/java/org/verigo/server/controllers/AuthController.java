@@ -18,7 +18,6 @@ import org.verigo.server.security.jwt.JwtUtils;
 import org.verigo.server.security.services.CustomUserDetails;
 
 import javax.validation.Valid;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -75,6 +74,6 @@ public class AuthController {
 
         userRepository.save(user);
 
-        return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+        return ResponseEntity.ok(new MessageResponse("Пользователь успешно зарегистрирован!"));
     }
 }
