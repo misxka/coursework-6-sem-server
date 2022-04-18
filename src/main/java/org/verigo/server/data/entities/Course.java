@@ -36,7 +36,7 @@ public class Course {
 //    @JsonManagedReference
     private Set<Task> tasks = new HashSet<>();
 
-    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "course", cascade = CascadeType.MERGE)
     @JsonIgnoreProperties("course")
     private List<Group> groups;
 

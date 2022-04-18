@@ -88,6 +88,7 @@ public class Task {
         this.course = course;
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -53,7 +53,7 @@ public class User {
 //    @JoinColumn(name = "role_id", nullable = false)
 //    private Role role;
 
-//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+//    @OneToMany(mappedBy = "user", cascade = CascadeType.MERGE)
 //    @JsonManagedReference(value = "user-results")
 //    private List<UserTaskResult> tasksResults = new ArrayList<>();
 
