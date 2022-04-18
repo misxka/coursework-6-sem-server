@@ -79,7 +79,7 @@ public class AuthController {
             signUpRequest.getLogin(),
             signUpRequest.getPassword(),
             signUpRequest.getEmail(),
-            signUpRequest.getSurname(),
+            null,
             signUpRequest.getRole()
         );
 

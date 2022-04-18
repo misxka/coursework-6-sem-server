@@ -12,10 +12,6 @@ public class SignupRequest {
 
     private String role;
 
-    private String surname;
-
-    private String name;
-
     @NotBlank
     @Size(min = 6, max = 40)
     private String password;
@@ -50,21 +46,5 @@ public class SignupRequest {
 
     public void setRole(String role) {
         this.role = role;
-    }
-
-    public String getSurname() {
-        return surname;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 }
