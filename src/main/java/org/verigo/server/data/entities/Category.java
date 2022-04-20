@@ -1,5 +1,6 @@
 package org.verigo.server.data.entities;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
@@ -9,6 +10,7 @@ import java.util.Set;
 
 @Entity(name = "categories")
 @SequenceGenerator(name="CATEGORY_SEQ", sequenceName="category_sequence")
+@JsonFilter("categoryFilter")
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="CATEGORY_SEQ")
