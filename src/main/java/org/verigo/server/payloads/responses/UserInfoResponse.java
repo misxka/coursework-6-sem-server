@@ -1,37 +1,18 @@
 package org.verigo.server.payloads.responses;
 
-public class JwtResponse {
-    private String token;
-    private String type = "Bearer";
+public class UserInfoResponse {
     private Integer id;
     private String login;
     private String role;
     private String email;
     private String fullname;
 
-    public JwtResponse(String accessToken, Integer id, String login, String email, String fullname, String role) {
-        this.token = accessToken;
+    public UserInfoResponse(Integer id, String login, String email, String fullname, String role) {
         this.id = id;
         this.login = login;
         this.role = role;
         this.email = email;
         this.fullname = fullname;
-    }
-
-    public String getAccessToken() {
-        return token;
-    }
-
-    public void setAccessToken(String accessToken) {
-        this.token = accessToken;
-    }
-
-    public String getTokenType() {
-        return type;
-    }
-
-    public void setTokenType(String tokenType) {
-        this.type = tokenType;
     }
 
     public Integer getId() {
