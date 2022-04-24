@@ -22,7 +22,7 @@ public class Category {
     @Column(unique = true, nullable = false)
     private String link;
 
-    @OneToMany(mappedBy = "category", cascade = CascadeType.MERGE)
+    @OneToMany(mappedBy = "category", cascade = { CascadeType.MERGE, CascadeType.REMOVE })
     @JsonIgnoreProperties("category")
     private Set<Card> cards = new HashSet<Card>();
 
