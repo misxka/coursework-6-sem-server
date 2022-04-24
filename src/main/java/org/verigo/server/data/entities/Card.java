@@ -12,16 +12,16 @@ public class Card {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="CARD_SEQ")
     private Integer id;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String image;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String audio;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String word;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String translation;
 
     @ManyToOne(fetch = FetchType.EAGER)

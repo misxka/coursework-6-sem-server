@@ -1,6 +1,6 @@
 package org.verigo.server.payloads.requests.category;
 
-public class CategoryCreateRequest {
+public class UpdateRequest {
     private String name;
 
     public String getName() {

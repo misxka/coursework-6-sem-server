@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.verigo.server.data.entities.Category;
 import org.verigo.server.data.repositories.CategoryRepository;
-import org.verigo.server.payloads.requests.category.CategoryCreateRequest;
-import org.verigo.server.payloads.requests.category.CategoryUpdateRequest;
+import org.verigo.server.payloads.requests.category.CreateRequest;
+import org.verigo.server.payloads.requests.category.UpdateRequest;
 import org.verigo.server.payloads.responses.category.CreateResponse;
 import org.verigo.server.payloads.responses.category.DeleteResponse;
 import org.verigo.server.payloads.responses.category.UpdateResponse;
@@ -32,11 +32,11 @@ public class CategoryController {
     }
 
     @PatchMapping(value = "/{id}", produces = "application/json")
-    public UpdateResponse updateCategory(@PathVariable int id, @RequestBody CategoryUpdateRequest categoryUpdateRequest) {
+    public UpdateResponse updateCategory(@PathVariable int id, @RequestBody UpdateRequest updateRequest) {
         if(!repository.existsById(id)) return new UpdateResponse(id, null, 404, "Категория не найдена.");
 
         Category category = repository.findById(id).get();
-        category.setName(categoryUpdateRequest.getName());
+        category.setName(updateRequest.getName());
         repository.save(category);
 
         return new UpdateResponse(id, category.getName(), 200, "Категория успешно изменена.");
@@ -51,10 +51,10 @@ public class CategoryController {
     }
 
     @PostMapping(value = "", produces = "application/json")
-    public CreateResponse createCategory(@RequestBody CategoryCreateRequest categoryCreateRequest) {
-        if(repository.existsByName(categoryCreateRequest.getName())) return new CreateResponse(null, 400, "Категория с таким именем уже существует.");
+    public CreateResponse createCategory(@RequestBody CreateRequest createRequest) {
+        if(repository.existsByName(createRequest.getName())) return new CreateResponse(null, 400, "Категория с таким именем уже существует.");
 
-        Category category = repository.save(new Category(categoryCreateRequest.getName()));
+        Category category = repository.save(new Category(createRequest.getName()));
         return new CreateResponse(category, 201, "Категория успешно создана.");
     }
 }
