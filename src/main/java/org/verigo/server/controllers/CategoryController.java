@@ -7,7 +7,7 @@ import org.verigo.server.data.repositories.CategoryRepository;
 import org.verigo.server.payloads.requests.category.CreateRequest;
 import org.verigo.server.payloads.requests.category.UpdateRequest;
 import org.verigo.server.payloads.responses.category.CreateResponse;
-import org.verigo.server.payloads.responses.category.DeleteResponse;
+import org.verigo.server.payloads.responses.DeleteResponse;
 import org.verigo.server.payloads.responses.category.UpdateResponse;
 
 import java.util.List;

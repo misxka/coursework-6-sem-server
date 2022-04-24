@@ -37,6 +37,14 @@ public class CloudinaryService {
         }
     }
 
+    public void delete(String publicId, String resourceType) {
+        try {
+            cloudinaryConfig.uploader().destroy(publicId, ObjectUtils.asMap("resource_type", resourceType));
+        } catch (Exception ex) {
+            logger.error(ex.getMessage());
+        }
+    }
+
     private File convertMultiPartToFile(MultipartFile file) throws IOException {
         File convFile = new File(file.getOriginalFilename());
         FileOutputStream fos = new FileOutputStream(convFile);

@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.verigo.server.data.entities.Card;
 import org.verigo.server.data.repositories.CardRepository;
 import org.verigo.server.data.repositories.CategoryRepository;
+import org.verigo.server.payloads.responses.DeleteResponse;
 import org.verigo.server.payloads.responses.card.CreateResponse;
 import org.verigo.server.services.CloudinaryService;
 
@@ -47,5 +48,19 @@ public class CardController {
         Card createdCard = repository.save(card);
 
         return new CreateResponse(createdCard, 201, "Карточка успешно создана.");
+    }
+
+    @DeleteMapping(value = "/{id}", produces = "application/json")
+    public DeleteResponse deleteCard(@PathVariable int id) {
+        Boolean isPresent = repository.existsById(id);
+        if(!isPresent) return new DeleteResponse(404, "Карточка не найдена.");
+        Card card = repository.findById(id).get();
+
+        repository.deleteById(id);
+
+        cloudinaryService.delete(card.getImage(), "image");
+        cloudinaryService.delete(card.getAudio(), "video");
+
+        return new DeleteResponse(200, "Карточка удалена.");
     }
 }
