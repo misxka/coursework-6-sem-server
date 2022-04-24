@@ -5,10 +5,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.verigo.server.data.entities.Category;
-import org.verigo.server.data.entities.Course;
 import org.verigo.server.data.repositories.CategoryRepository;
 
-import java.math.BigDecimal;
 
 @Component
 @Order(5)
@@ -23,21 +21,21 @@ public class CategoryLoader implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         if (repository.count() == 0) {
-            Category category = new Category("Animal (set A)", "/animal-set-a");
+            Category category = new Category("Animal (set A)");
             this.repository.save(category);
-            category = new Category("Animal (set B)", "/animal-set-b");
+            category = new Category("Animal (set B)");
             this.repository.save(category);
-            category = new Category("Animal (set C)", "/animal-set-c");
+            category = new Category("Animal (set C)");
             this.repository.save(category);
-            category = new Category("Action (set A)", "/action-set-a");
+            category = new Category("Action (set A)");
             this.repository.save(category);
-            category = new Category("Action (set B)", "/action-set-b");
+            category = new Category("Action (set B)");
             this.repository.save(category);
-            category = new Category("Emotions", "/emotions");
+            category = new Category("Emotions");
             this.repository.save(category);
-            category = new Category("Fruits", "/fruits");
+            category = new Category("Fruits");
             this.repository.save(category);
-            category = new Category("Clothes", "/clothes");
+            category = new Category("Clothes");
             this.repository.save(category);
         }
     }

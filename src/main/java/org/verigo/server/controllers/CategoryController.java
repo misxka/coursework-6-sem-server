@@ -1,14 +1,12 @@
 package org.verigo.server.controllers;
 
-import com.fasterxml.jackson.databind.ser.FilterProvider;
-import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
-import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
 import org.verigo.server.data.entities.Category;
 import org.verigo.server.data.repositories.CategoryRepository;
+import org.verigo.server.payloads.requests.category.CategoryCreateRequest;
 import org.verigo.server.payloads.requests.category.CategoryUpdateRequest;
+import org.verigo.server.payloads.responses.category.CreateResponse;
 import org.verigo.server.payloads.responses.category.DeleteResponse;
 import org.verigo.server.payloads.responses.category.UpdateResponse;
 
@@ -22,28 +20,15 @@ public class CategoryController {
     private CategoryRepository repository;
 
     @GetMapping(value = "", produces = "application/json")
-    public MappingJacksonValue getAllCategoriesPlain() {
-        SimpleBeanPropertyFilter simpleBeanPropertyFilter = SimpleBeanPropertyFilter.serializeAll();
-
-        FilterProvider filterProvider = new SimpleFilterProvider().addFilter("categoryFilter", simpleBeanPropertyFilter);
+    public List<Category> getAllCategoriesPlain() {
         List<Category> categories = repository.findAll();
-        MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(categories);
-        mappingJacksonValue.setFilters(filterProvider);
-
-        return mappingJacksonValue;
+        return categories;
     }
 
     @GetMapping(value = "/{id}", produces = "application/json")
-    public MappingJacksonValue getCategory(@PathVariable int id) {
-        SimpleBeanPropertyFilter simpleBeanPropertyFilter = SimpleBeanPropertyFilter.serializeAll();
-
-        FilterProvider filterProvider = new SimpleFilterProvider().addFilter("categoryFilter", simpleBeanPropertyFilter);
-
+    public Category getCategory(@PathVariable int id) {
         Category category = repository.findById(id).get();
-        MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(category);
-        mappingJacksonValue.setFilters(filterProvider);
-
-        return mappingJacksonValue;
+        return category;
     }
 
     @PatchMapping(value = "/{id}", produces = "application/json")
@@ -63,5 +48,13 @@ public class CategoryController {
         if(!isPresent) return new DeleteResponse(404, "Категория не найдена.");
         repository.deleteById(id);
         return new DeleteResponse(200, "Категория удалена.");
+    }
+
+    @PostMapping(value = "", produces = "application/json")
+    public CreateResponse createCategory(@RequestBody CategoryCreateRequest categoryCreateRequest) {
+        if(repository.existsByName(categoryCreateRequest.getName())) return new CreateResponse(null, 400, "Категория с таким именем уже существует.");
+
+        Category category = repository.save(new Category(categoryCreateRequest.getName()));
+        return new CreateResponse(category, 201, "Категория успешно создана.");
     }
 }
