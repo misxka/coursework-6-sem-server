@@ -1,5 +1,7 @@
 package org.verigo.server.data.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -22,9 +24,9 @@ public class Card {
     @Column(unique = true, nullable = false)
     private String translation;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="category_id", nullable = false)
-//    @JsonBackReference
+    @JsonBackReference
     private Category category;
 
 
