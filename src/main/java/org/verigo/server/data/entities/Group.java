@@ -23,6 +23,7 @@ public class Group {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="teacher_id", nullable = false)
+    @JsonIgnoreProperties("groups")
     private User teacher;
 
     @ManyToMany
@@ -31,7 +32,7 @@ public class Group {
         joinColumns = @JoinColumn(name = "group_id"),
         inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-//    @JsonIgnoreProperties("groups")
+    @JsonIgnoreProperties("groups")
     private List<User> participants = new ArrayList<>();
 
     public Group() {}

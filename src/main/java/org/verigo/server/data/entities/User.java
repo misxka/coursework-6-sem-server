@@ -36,7 +36,7 @@ public class User {
     private String role;
 
     @ManyToMany(mappedBy = "participants")
-    @JsonIgnoreProperties("participants")
+    @JsonIgnoreProperties({ "course", "participants", "teacher" })
     private List<Group> groups = new ArrayList<>();
 
     public User() {}
