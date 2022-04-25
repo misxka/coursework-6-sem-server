@@ -33,7 +33,7 @@ public class CategoryController {
 
     @PatchMapping(value = "/{id}", produces = "application/json")
     public UpdateResponse updateCategory(@PathVariable int id, @RequestBody UpdateRequest updateRequest) {
-        if(!repository.existsById(id)) return new UpdateResponse(id, null, 404, "Категория не найдена.");
+        if (!repository.existsById(id)) return new UpdateResponse(id, null, 404, "Категория не найдена.");
 
         Category category = repository.findById(id).get();
         category.setName(updateRequest.getName());

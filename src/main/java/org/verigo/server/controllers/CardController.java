@@ -1,7 +1,6 @@
 package org.verigo.server.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.verigo.server.data.entities.Card;
@@ -9,6 +8,7 @@ import org.verigo.server.data.repositories.CardRepository;
 import org.verigo.server.data.repositories.CategoryRepository;
 import org.verigo.server.payloads.responses.DeleteResponse;
 import org.verigo.server.payloads.responses.card.CreateResponse;
+import org.verigo.server.payloads.responses.card.UpdateResponse;
 import org.verigo.server.services.CloudinaryService;
 
 import java.util.List;
@@ -26,10 +26,16 @@ public class CardController {
     @Autowired
     private CloudinaryService cloudinaryService;
 
-    @GetMapping(value = "/{categoryId}", produces = "application/json")
+    @GetMapping(value = "/category/{categoryId}", produces = "application/json")
     public List<Card> getCardsByCategory(@PathVariable int categoryId) {
         List<Card> cards = repository.findAllByCategory_Id(categoryId);
         return cards;
+    }
+
+    @GetMapping(value = "/{cardId}", produces = "application/json")
+    public Card getCardById(@PathVariable int cardId) {
+        Card card = repository.findById(cardId).get();
+        return card;
     }
 
     @PostMapping(value = "")
@@ -62,5 +68,42 @@ public class CardController {
         cloudinaryService.delete(card.getAudio(), "video");
 
         return new DeleteResponse(200, "Карточка удалена.");
+    }
+
+    @PutMapping(value = "")
+    public UpdateResponse updateCategory(
+            @RequestParam MultipartFile audio,
+            @RequestParam MultipartFile image,
+            @RequestParam String word,
+            @RequestParam String translation,
+            @RequestParam String id
+    ) {
+        if (!repository.existsById(Integer.valueOf(id))) return new UpdateResponse(Integer.valueOf(id), null, 404, "Карточка не найдена.");
+
+        Card card = repository.findById(Integer.valueOf(id)).get();
+
+        String imageId;
+        String audioId;
+
+        if (!word.trim().equals("")) card.setWord(word);
+        if (!translation.trim().equals("")) card.setTranslation(translation);
+
+        if (!audio.isEmpty()) {
+            audioId = cloudinaryService.upload(audio, "video");
+        } else {
+            audioId = card.getAudio();
+        }
+
+        if (!image.isEmpty()) {
+            imageId = cloudinaryService.upload(image, "image");
+        } else {
+            imageId = card.getImage();
+        }
+
+        card.setAudio(audioId);
+        card.setImage(imageId);
+        Card result = repository.save(card);
+
+        return new UpdateResponse(Integer.valueOf(id), result, 200, "Карточка успешно изменена.");
     }
 }
