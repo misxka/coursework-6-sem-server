@@ -5,11 +5,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.verigo.server.data.entities.Card;
 import org.verigo.server.data.entities.User;
 import org.verigo.server.data.repositories.UserRepository;
 import org.verigo.server.mailer.EmailService;
 import org.verigo.server.payloads.requests.user.CreateRequest;
 import org.verigo.server.payloads.requests.user.UpdateRequest;
+import org.verigo.server.payloads.responses.DeleteResponse;
 import org.verigo.server.payloads.responses.MessageResponse;
 import org.verigo.server.payloads.responses.user.UpdateResponse;
 
@@ -53,5 +55,14 @@ public class UserController {
         repository.save(user);
 
         return new UpdateResponse(id, user, 200, "Пользователь успешно изменен.");
+    }
+
+    @DeleteMapping(value = "/{id}", produces = "application/json")
+    public DeleteResponse deleteUser(@PathVariable int id) {
+        boolean isPresent = repository.existsById(id);
+        if(!isPresent) return new DeleteResponse(404, "Пользователь не найден.");
+
+        repository.deleteById(id);
+        return new DeleteResponse(200, "Пользователь удален.");
     }
 }
