@@ -13,6 +13,7 @@ import org.verigo.server.mailer.EmailService;
 import org.verigo.server.payloads.requests.user.CreateRequest;
 import org.verigo.server.payloads.responses.DeleteResponse;
 import org.verigo.server.payloads.responses.MessageResponse;
+import org.verigo.server.payloads.responses.user.StatsResponse;
 import org.verigo.server.payloads.responses.user.UpdateResponse;
 import org.verigo.server.payloads.responses.user.UserDTO;
 import org.verigo.server.services.UserService;
@@ -98,5 +99,11 @@ public class UserController {
 
         repository.deleteById(id);
         return new DeleteResponse(200, "Пользователь удален.");
+    }
+
+    @GetMapping(value = "/stats", produces = "application/json")
+    public StatsResponse getStats(@RequestParam(name = "role", required = false) String role
+    ) {
+        return new StatsResponse(role, repository.countAllByRole(role));
     }
 }

@@ -14,5 +14,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     Boolean existsByEmail(String email);
     List<User> findAllByRole(String role);
     List<User> findAllByFullname(String fullname);
+    int countAllByRole(String Role);
     Page<User> findAllByLoginContainsIgnoreCaseAndEmailContainsIgnoreCaseAndFullnameContainsIgnoreCaseAndRoleContainsIgnoreCase(String login, String Email, String Fullname, String role, Pageable page);
 }
