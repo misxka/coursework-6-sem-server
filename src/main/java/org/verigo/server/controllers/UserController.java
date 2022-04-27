@@ -45,6 +45,23 @@ public class UserController {
         ));
     }
 
+    @GetMapping(value = "/filter", produces = "application/json")
+    public Page<User> getFilteredUsers(@RequestParam(name = "page", required = false) String page,
+           @RequestParam(name = "size", required = false) String size,
+           @RequestParam(name = "field", required = false) String field,
+           @RequestParam(name = "direction", required = false) boolean direction,
+           @RequestParam(name = "login", required = false) String login,
+           @RequestParam(name = "email", required = false) String email,
+           @RequestParam(name = "fullname", required = false) String fullname,
+           @RequestParam(name = "role", required = false) String role
+    ) {
+        return repository.findAllByLoginContainsIgnoreCaseAndEmailContainsIgnoreCaseAndFullnameContainsIgnoreCaseAndRoleContainsIgnoreCase(login, email, fullname, role, PageRequest.of(
+            Integer.valueOf(page),
+            Integer.valueOf(size),
+            direction ? Sort.by(field).ascending() : Sort.by(field).descending()
+        ));
+    }
+
     @PostMapping(value = "", produces = "application/json")
     public ResponseEntity<MessageResponse> addUser(@RequestBody CreateRequest payload) {
         User user = new User(payload.getLogin(), payload.getPassword(), payload.getEmail(), payload.getFullname(), payload.getRole());
