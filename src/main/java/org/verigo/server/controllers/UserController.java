@@ -4,15 +4,13 @@ import com.github.fge.jsonpatch.JsonPatch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.verigo.server.data.entities.Card;
 import org.verigo.server.data.entities.User;
 import org.verigo.server.data.repositories.UserRepository;
 import org.verigo.server.mailer.EmailService;
 import org.verigo.server.payloads.requests.user.CreateRequest;
-import org.verigo.server.payloads.requests.user.UpdateRequest;
 import org.verigo.server.payloads.responses.DeleteResponse;
 import org.verigo.server.payloads.responses.MessageResponse;
 import org.verigo.server.payloads.responses.user.UpdateResponse;
@@ -35,8 +33,16 @@ public class UserController {
     private UserService userService;
 
     @GetMapping(value = "", produces = "application/json")
-    public Page<User> getUsers(@RequestParam(name = "page", required = false) String page, @RequestParam(name = "size", required = false) String size) {
-        return repository.findAll(PageRequest.of(Integer.valueOf(page), Integer.valueOf(size)));
+    public Page<User> getUsers(@RequestParam(name = "page", required = false) String page,
+           @RequestParam(name = "size", required = false) String size,
+           @RequestParam(name = "field", required = false) String field,
+           @RequestParam(name = "direction", required = false) boolean direction
+    ) {
+        return repository.findAll(PageRequest.of(
+            Integer.valueOf(page),
+            Integer.valueOf(size),
+            direction ? Sort.by(field).ascending() : Sort.by(field).descending()
+        ));
     }
 
     @PostMapping(value = "", produces = "application/json")
