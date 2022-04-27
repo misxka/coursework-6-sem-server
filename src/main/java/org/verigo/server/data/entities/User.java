@@ -3,11 +3,13 @@ package org.verigo.server.data.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -35,11 +37,23 @@ public class User {
     @Column(nullable = false)
     private String role;
 
+    @Column(name = "created_at", nullable = false, columnDefinition = "DATE")
+    private Date createdAt;
+
     @ManyToMany(mappedBy = "participants")
     @JsonIgnoreProperties({ "course", "participants", "teacher" })
     private List<Group> groups = new ArrayList<>();
 
     public User() {}
+
+    public User(String login, String password, String email, String fullname, String role, Date createdAt) {
+        this.login = login;
+        this.setPassword(password);
+        this.email = email.toLowerCase();
+        this.fullname = fullname;
+        this.role = role;
+        this.createdAt = createdAt;
+    }
 
     public User(String login, String password, String email, String fullname, String role) {
         this.login = login;
@@ -106,6 +120,14 @@ public class User {
         this.role = role;
     }
 
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
     public List<Group> getGroups() {
         return groups;
     }
@@ -133,13 +155,14 @@ public class User {
             Objects.equals(password, user.password) &&
             Objects.equals(email, user.email) &&
             Objects.equals(fullname, user.fullname) &&
+            Objects.equals(createdAt, user.createdAt) &&
             Objects.equals(groups, user.groups) &&
             Objects.equals(role, user.role);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, login, password, email, fullname, role, groups);
+        return Objects.hash(id, login, password, email, fullname, role, groups, createdAt);
     }
 
     @Override
@@ -150,6 +173,7 @@ public class User {
             ", email='" + email + '\'' +
             ", fullname='" + fullname + '\'' +
             ", role='" + role + '\'' +
+            ", createdAt='" + createdAt + '\'' +
             ", groups='" + groups + '\'' +
             '}';
     }
