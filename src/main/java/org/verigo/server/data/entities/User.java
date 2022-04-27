@@ -2,6 +2,7 @@ package org.verigo.server.data.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -22,7 +23,6 @@ public class User {
     @Column(unique = true, nullable = false)
     private String login;
 
-    @JsonIgnore
     @Column(nullable = false)
     private String password;
 

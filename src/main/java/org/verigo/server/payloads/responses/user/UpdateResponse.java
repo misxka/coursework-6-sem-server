@@ -7,11 +7,11 @@ public class UpdateResponse {
 
     private Integer status;
 
-    private User user;
+    private UserDTO user;
 
     private Integer id;
 
-    public UpdateResponse(Integer id, User user, Integer status, String message) {
+    public UpdateResponse(Integer id, UserDTO user, Integer status, String message) {
         this.id = id;
         this.user = user;
         this.status = status;
@@ -34,11 +34,11 @@ public class UpdateResponse {
         this.status = status;
     }
 
-    public User getUser() {
+    public UserDTO getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(UserDTO user) {
         this.user = user;
     }
 

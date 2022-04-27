@@ -1,8 +1,10 @@
 package org.verigo.server.controllers;
 
+import com.github.fge.jsonpatch.JsonPatch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.verigo.server.data.entities.Card;
@@ -14,6 +16,8 @@ import org.verigo.server.payloads.requests.user.UpdateRequest;
 import org.verigo.server.payloads.responses.DeleteResponse;
 import org.verigo.server.payloads.responses.MessageResponse;
 import org.verigo.server.payloads.responses.user.UpdateResponse;
+import org.verigo.server.payloads.responses.user.UserDTO;
+import org.verigo.server.services.UserService;
 
 import javax.mail.MessagingException;
 
@@ -26,6 +30,9 @@ public class UserController {
 
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private UserService userService;
 
     @GetMapping(value = "", produces = "application/json")
     public Page<User> getUsers(@RequestParam(name = "page", required = false) String page, @RequestParam(name = "size", required = false) String size) {
@@ -46,15 +53,19 @@ public class UserController {
         return ResponseEntity.ok(new MessageResponse("Пользователь успешно зарегистрирован!"));
     }
 
-    @PutMapping()
-    public UpdateResponse updateUser(@PathVariable int id, @RequestBody UpdateRequest updateRequest) {
+    @PatchMapping(path = "/{id}", consumes = "application/json-patch+json")
+    public UpdateResponse updateUser(@PathVariable int id, @RequestBody JsonPatch patch) {
         if (!repository.existsById(id)) return new UpdateResponse(id, null, 404, "Пользователь не найден.");
 
-        //TODO: add real logic
-        User user = repository.findById(id).get();
-        repository.save(user);
+        try {
+            User user = repository.findById(id).get();
+            User userPatched = userService.applyPatchToUser(patch, user);
+            repository.save(userPatched);
 
-        return new UpdateResponse(id, user, 200, "Пользователь успешно изменен.");
+            return new UpdateResponse(id, new UserDTO(user), 200, "Пользователь успешно изменен.");
+        } catch (Exception e) {
+            return new UpdateResponse(id, null, 500, "Серверная ошибка.");
+        }
     }
 
     @DeleteMapping(value = "/{id}", produces = "application/json")
