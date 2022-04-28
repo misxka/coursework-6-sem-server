@@ -1,15 +1,11 @@
 package org.verigo.server.data.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Entity(name = "courses")
 @SequenceGenerator(name="COURSE_SEQ", sequenceName="course_sequence", initialValue = 1, allocationSize = 1)
@@ -21,25 +17,25 @@ public class Course {
     @Column(unique = true, nullable = false)
     private String title;
 
-    @Column( nullable = false)
+    @Column(nullable = false)
     private BigDecimal price;
 
-    @Column( nullable = false)
+    @Column(nullable = false)
     private String language;
 
-    @Column( nullable = false)
+    @Column(nullable = false)
     private String level;
 
     @Column(name = "is_online", nullable = false)
     private boolean isOnline;
 
-    @OneToMany(mappedBy = "course", cascade = { CascadeType.MERGE, CascadeType.REMOVE })
-    @JsonIgnoreProperties({ "course" })
+    @OneToMany(mappedBy = "course", cascade = { CascadeType.REMOVE })
+    @JsonIgnoreProperties("course")
     private Set<Task> tasks = new HashSet<>();
 
     @OneToMany(mappedBy = "course", cascade = { CascadeType.MERGE })
-    @JsonIgnore
-    private List<Group> groups;
+    @JsonIgnoreProperties({ "teacher", "participants", "course" })
+    private List<Group> groups = new ArrayList<>();
 
 
     public Course() {}
@@ -97,6 +93,10 @@ public class Course {
 
     public void setPrice(BigDecimal price) {
         this.price = price;
+    }
+
+    public void setPrice(String price) {
+        this.price = new BigDecimal(price);
     }
 
     public void setOnline(boolean isOnline) {

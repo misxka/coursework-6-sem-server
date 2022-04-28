@@ -1,5 +1,6 @@
 package org.verigo.server.data.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
@@ -26,6 +27,7 @@ public class Task {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="course_id", nullable = false)
+    @JsonIgnoreProperties("tasks")
     private Course course;
 
     public Task() {}
