@@ -16,9 +16,15 @@ import org.verigo.server.payloads.responses.MessageResponse;
 import org.verigo.server.payloads.responses.user.StatsResponse;
 import org.verigo.server.payloads.responses.user.UpdateResponse;
 import org.verigo.server.payloads.responses.user.UserDTO;
+import org.verigo.server.payloads.responses.user.YearStatsResponse;
 import org.verigo.server.services.UserService;
 
 import javax.mail.MessagingException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/users")
@@ -105,5 +111,35 @@ public class UserController {
     public StatsResponse getStats(@RequestParam(name = "role", required = false) String role
     ) {
         return new StatsResponse(role, repository.countAllByRole(role));
+    }
+
+    @GetMapping(value = "/year-stats", produces = "application/json")
+    public YearStatsResponse getYearStats() {
+        try {
+            Map<String, int[]> yearStatsMap = new HashMap<>();
+            LocalDate currentDate = LocalDate.now();
+            int currentYear = currentDate.getYear();
+            SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+            String[] roles = { "STUDENT", "TEACHER", "ADMIN" };
+
+            for(String role: roles) {
+                int year = currentYear;
+
+                int[] amounts = new int[3];
+                int i = 0;
+                while(year > currentYear - 3) {
+                    int amount = (repository.findAllByRoleBetweenDates(role, formatter.parse("01-01-" + year), formatter.parse("31-12-" + year))).size();
+                    year--;
+                    amounts[i++] = amount;
+                }
+
+                yearStatsMap.put(role.toLowerCase(), amounts);
+            }
+
+            return new YearStatsResponse(yearStatsMap);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

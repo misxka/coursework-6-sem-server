@@ -8,7 +8,6 @@ import org.verigo.server.data.entities.User;
 import org.verigo.server.data.repositories.UserRepository;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 @Component
 @Order(1)
