@@ -1,5 +1,6 @@
 package org.verigo.server.data.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -32,12 +33,12 @@ public class Course {
     @Column(name = "is_online", nullable = false)
     private boolean isOnline;
 
-    @OneToMany(mappedBy = "course", cascade = CascadeType.MERGE)
-//    @JsonManagedReference
+    @OneToMany(mappedBy = "course", cascade = { CascadeType.MERGE, CascadeType.REMOVE })
+    @JsonIgnoreProperties({ "course" })
     private Set<Task> tasks = new HashSet<>();
 
-    @OneToMany(mappedBy = "course", cascade = CascadeType.MERGE)
-    @JsonIgnoreProperties("course")
+    @OneToMany(mappedBy = "course", cascade = { CascadeType.MERGE })
+    @JsonIgnore
     private List<Group> groups;
 
 
