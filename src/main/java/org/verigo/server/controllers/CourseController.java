@@ -61,6 +61,24 @@ public class CourseController {
         return courses;
     }
 
+    @GetMapping(value = "/students/self/{id}", produces = "application/json")
+    public List<Course> getStudentPersonalCourses(@PathVariable int id) {
+        List<Course> allCourses = repository.findAll();
+
+        User user = userRepository.findById(id).get();
+        List<Integer> includedIds = repository.findAllByParticipants(user).stream().map(Course::getId).collect(Collectors.toList());
+
+        List<Course> courses = new ArrayList(allCourses);
+        List<Course> filtered = new ArrayList<>();
+        includedIds.forEach(includedId -> {
+            courses.forEach(course -> {
+                if(course.getId() == includedId) filtered.add(course);
+            });
+        });
+
+        return filtered;
+    }
+
     @GetMapping(value = "/filter", produces = "application/json")
     public Page<Course> getFilteredCourses(@RequestParam(name = "page", required = false) String page,
            @RequestParam(name = "size", required = false) String size,
