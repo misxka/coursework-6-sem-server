@@ -9,7 +9,7 @@ import org.verigo.server.data.repositories.CardRepository;
 import org.verigo.server.data.repositories.CategoryRepository;
 
 @Component
-@Order(6)
+@Order(5)
 public class CardLoader implements CommandLineRunner {
     private final CardRepository repository;
     private final CategoryRepository categoryRepository;

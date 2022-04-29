@@ -1,17 +1,11 @@
 package org.verigo.server.data.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Entity(name = "users")
 @SequenceGenerator(name="USER_SEQ", sequenceName="user_sequence", initialValue = 1, allocationSize = 1)
@@ -40,9 +34,14 @@ public class User {
     @Column(name = "created_at", nullable = false, columnDefinition = "DATE")
     private Date createdAt;
 
-    @ManyToMany(mappedBy = "participants")
-    @JsonIgnoreProperties({ "course", "participants", "teacher" })
-    private List<Group> groups = new ArrayList<>();
+    @ManyToMany
+    @JoinTable(
+        name = "user_course",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "course_id")
+    )
+    @JsonIgnoreProperties("participants")
+    private List<Course> courses = new ArrayList<>();
 
     public User() {}
 
@@ -62,14 +61,6 @@ public class User {
         this.fullname = fullname;
         this.role = role;
     }
-
-//    @ManyToOne
-//    @JoinColumn(name = "role_id", nullable = false)
-//    private Role role;
-
-//    @OneToMany(mappedBy = "user", cascade = CascadeType.MERGE)
-//    @JsonManagedReference(value = "user-results")
-//    private List<UserTaskResult> tasksResults = new ArrayList<>();
 
 
     public Integer getId() {
@@ -128,21 +119,17 @@ public class User {
         this.createdAt = createdAt;
     }
 
-    public List<Group> getGroups() {
-        return groups;
+    public List<Course> getCourses() {
+        return courses;
     }
 
-    public void setGroups(List<Group> groups) {
-        this.groups = groups;
+    public void setCourses(List<Course> courses) {
+        this.courses = courses;
     }
-//
-//    public List<UserTaskResult> getTasksResults() {
-//        return tasksResults;
-//    }
-//
-//    public void setTasksResults(List<UserTaskResult> tasksResults) {
-//        this.tasksResults = tasksResults;
-//    }
+
+    public void addCourses(Course course) {
+        this.courses.add(course);
+    }
 
 
     @Override
@@ -156,25 +143,17 @@ public class User {
             Objects.equals(email, user.email) &&
             Objects.equals(fullname, user.fullname) &&
             Objects.equals(createdAt, user.createdAt) &&
-            Objects.equals(groups, user.groups) &&
+            Objects.equals(courses, user.courses) &&
             Objects.equals(role, user.role);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, login, password, email, fullname, role, groups, createdAt);
+        return Objects.hash(id, login, password, email, fullname, role, courses, createdAt);
     }
 
     @Override
     public String toString() {
-        return "User{" +
-            "id=" + id +
-            ", login='" + login + '\'' +
-            ", email='" + email + '\'' +
-            ", fullname='" + fullname + '\'' +
-            ", role='" + role + '\'' +
-            ", createdAt='" + createdAt + '\'' +
-            ", groups='" + groups + '\'' +
-            '}';
+        return "";
     }
 }

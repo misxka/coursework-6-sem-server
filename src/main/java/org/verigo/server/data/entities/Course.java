@@ -1,5 +1,6 @@
 package org.verigo.server.data.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -29,14 +30,13 @@ public class Course {
     @Column(name = "is_online", nullable = false)
     private boolean isOnline;
 
-    @OneToMany(mappedBy = "course", cascade = { CascadeType.REMOVE })
+    @OneToMany(mappedBy = "course", fetch = FetchType.LAZY, cascade = { CascadeType.REMOVE })
     @JsonIgnoreProperties("course")
     private Set<Task> tasks = new HashSet<>();
 
-    @OneToMany(mappedBy = "course", cascade = { CascadeType.MERGE })
-    @JsonIgnoreProperties({ "teacher", "participants", "course" })
-    private List<Group> groups = new ArrayList<>();
-
+    @ManyToMany(mappedBy = "courses")
+    @JsonIgnore
+    private List<User> participants = new ArrayList<>();
 
     public Course() {}
 
@@ -70,10 +70,6 @@ public class Course {
         return tasks;
     }
 
-    public List<Group> getGroups() {
-        return groups;
-    }
-
     public String getLanguage() {
         return language;
     }
@@ -82,6 +78,9 @@ public class Course {
         return level;
     }
 
+    public List<User> getParticipants() {
+        return participants;
+    }
 
     public void setId(Integer id) {
         this.id = id;
@@ -107,16 +106,16 @@ public class Course {
         this.tasks = tasks;
     }
 
-    public void setGroups(List<Group> groups) {
-        this.groups = groups;
-    }
-
     public void setLanguage(String language) {
         this.language = language;
     }
 
     public void setLevel(String level) {
         this.level = level;
+    }
+
+    public void setParticipants(List<User> participants) {
+        this.participants = participants;
     }
 
 
@@ -131,26 +130,17 @@ public class Course {
             Objects.equals(isOnline, course.isOnline) &&
             Objects.equals(price, course.price) &&
             Objects.equals(tasks, course.tasks) &&
-            Objects.equals(groups, course.groups) &&
+            Objects.equals(participants, course.participants) &&
             Objects.equals(level, course.level);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, language, isOnline, price, level, tasks, groups);
+        return Objects.hash(id, title, language, isOnline, price, level, tasks, participants);
     }
 
     @Override
     public String toString() {
-        return "Course{" +
-            "id=" + id +
-            ", title='" + title + '\'' +
-            ", language='" + language + '\'' +
-            ", isOnline='" + isOnline + '\'' +
-            ", price='" + price + '\'' +
-            ", level='" + level + '\'' +
-            ", tasks='" + tasks + '\'' +
-            ", groups='" + groups + '\'' +
-            '}';
+        return "";
     }
 }

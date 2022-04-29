@@ -7,7 +7,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.verigo.server.data.entities.Course;
 import org.verigo.server.data.entities.User;
+import org.verigo.server.data.repositories.CourseRepository;
 import org.verigo.server.data.repositories.UserRepository;
 import org.verigo.server.mailer.EmailService;
 import org.verigo.server.payloads.requests.user.CreateRequest;
@@ -32,6 +34,9 @@ import java.util.Map;
 public class UserController {
     @Autowired
     private UserRepository repository;
+
+    @Autowired
+    private CourseRepository courseRepository;
 
     @Autowired
     private EmailService emailService;
@@ -141,5 +146,16 @@ public class UserController {
             e.printStackTrace();
             return null;
         }
+    }
+
+    @PostMapping(value = "/{userId}/courses/{courseId}")
+    public DeleteResponse addCourse(@PathVariable(value = "userId") int userId, @PathVariable(value = "courseId") int courseId) {
+        User user = repository.findById(userId).get();
+        Course course = courseRepository.findById(courseId).get();
+
+        user.addCourses(course);
+        User updated = repository.save(user);
+
+        return new DeleteResponse(200, "Вы успешно записаны на курс.");
     }
 }

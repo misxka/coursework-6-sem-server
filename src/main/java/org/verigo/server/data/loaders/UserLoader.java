@@ -5,18 +5,22 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.verigo.server.data.entities.User;
+import org.verigo.server.data.repositories.CourseRepository;
 import org.verigo.server.data.repositories.UserRepository;
 
 import java.text.SimpleDateFormat;
 
 @Component
-@Order(1)
+@Order(3)
 public class UserLoader implements CommandLineRunner {
     private final UserRepository repository;
 
+    private final CourseRepository courseRepository;
+
     @Autowired
-    public UserLoader(UserRepository repository) {
+    public UserLoader(UserRepository repository, CourseRepository courseRepository) {
         this.repository = repository;
+        this.courseRepository = courseRepository;
     }
 
     @Override
@@ -25,8 +29,10 @@ public class UserLoader implements CommandLineRunner {
             SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
 
             this.repository.save(new User("teacher", "password", "fakemail@mailmailmailmail.com", "Иванов Иван", "TEACHER", formatter.parse("01-02-2020")));
-            this.repository.save(new User("student1", "password", "fakemail@mailmailmailmail1.com", "Петров Иван", "STUDENT", formatter.parse("01-02-2020")));
-            this.repository.save(new User("student2", "password", "fakemail@mailmailmailmail2.com", "Сергеев Иван", "STUDENT", formatter.parse("01-02-2020")));
+            User user = new User("student1", "password", "fakemail@mailmailmailmail1.com", "Петров Иван", "STUDENT", formatter.parse("01-02-2020"));
+            this.repository.save(user);
+            user = new User("student2", "password", "fakemail@mailmailmailmail2.com", "Сергеев Иван", "STUDENT", formatter.parse("01-02-2020"));
+            this.repository.save(user);
             this.repository.save(new User("admin", "admin", "fakemail@mailmailmailmail3.com", "Сидоров Иван", "ADMIN", formatter.parse("01-02-2020")));
 
             this.repository.save(new User("teacher1", "password", "fakemail@mailmailmailmail01.com", "Иванов Иван", "TEACHER", formatter.parse("02-03-2020")));

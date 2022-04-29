@@ -9,7 +9,7 @@ import org.verigo.server.data.repositories.CourseRepository;
 import org.verigo.server.data.repositories.TaskRepository;
 
 @Component
-@Order(3)
+@Order(2)
 public class TaskLoader implements CommandLineRunner {
     private final TaskRepository repository;
     private final CourseRepository courseRepository;

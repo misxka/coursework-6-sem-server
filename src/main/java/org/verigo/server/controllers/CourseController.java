@@ -8,7 +8,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.verigo.server.data.entities.Course;
+import org.verigo.server.data.entities.User;
 import org.verigo.server.data.repositories.CourseRepository;
+import org.verigo.server.data.repositories.UserRepository;
 import org.verigo.server.payloads.responses.DeleteResponse;
 import org.verigo.server.payloads.responses.MessageResponse;
 import org.verigo.server.payloads.requests.course.CreateRequest;
@@ -16,6 +18,9 @@ import org.verigo.server.payloads.responses.course.UpdateResponse;
 import org.verigo.server.services.CourseService;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/courses")
@@ -26,6 +31,9 @@ public class CourseController {
 
     @Autowired
     private CourseService courseService;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @GetMapping(value = "", produces = "application/json")
     public Page<Course> getCourses(@RequestParam(name = "page", required = false) String page,
@@ -38,6 +46,19 @@ public class CourseController {
             Integer.valueOf(size),
             direction ? Sort.by(field).ascending() : Sort.by(field).descending()
         ));
+    }
+
+    @GetMapping(value = "/students/{id}", produces = "application/json")
+    public List<Course> getStudentCourses(@PathVariable int id) {
+        List<Course> allCourses = repository.findAll();
+
+        User user = userRepository.findById(id).get();
+        List<Integer> excludedIds = repository.findAllByParticipants(user).stream().map(Course::getId).collect(Collectors.toList());
+
+        List<Course> courses = new ArrayList(allCourses);
+        excludedIds.forEach(excludedId -> courses.removeIf(course -> course.getId() == excludedId));
+
+        return courses;
     }
 
     @GetMapping(value = "/filter", produces = "application/json")

@@ -11,7 +11,7 @@ import org.verigo.server.data.repositories.UserRepository;
 import java.math.BigDecimal;
 
 @Component
-@Order(2)
+@Order(1)
 public class CourseLoader implements CommandLineRunner {
     private final CourseRepository repository;
     private final UserRepository userRepository;

@@ -4,13 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.verigo.server.data.entities.Group;
+import org.verigo.server.data.entities.Course;
 import org.verigo.server.data.entities.User;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class CustomUserDetails implements UserDetails {
     private Integer id;
@@ -23,20 +20,20 @@ public class CustomUserDetails implements UserDetails {
 
     private String role;
 
-    private List<Group> groups;
+    private List<Course> courses;
 
     @JsonIgnore
     private String password;
 
     private Collection<? extends GrantedAuthority> authorities;
 
-    public CustomUserDetails(Integer id, String login, String email, String fullname, String role, List<Group> groups, String password, Collection<? extends GrantedAuthority> authorities) {
+    public CustomUserDetails(Integer id, String login, String email, String fullname, String role, List<Course> courses, String password, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.login = login;
         this.email = email;
         this.fullname = fullname;
         this.role = role;
-        this.groups = groups;
+        this.courses = courses;
         this.password = password;
         this.authorities = authorities;
     }
@@ -49,7 +46,7 @@ public class CustomUserDetails implements UserDetails {
             user.getEmail(),
             user.getFullname(),
             user.getRole(),
-            user.getGroups(),
+            user.getCourses(),
             user.getPassword(),
             authorities
         );
@@ -70,8 +67,8 @@ public class CustomUserDetails implements UserDetails {
     public String getRole() {
         return role;
     }
-    public List<Group> getGroups() {
-        return groups;
+    public List<Course> getCourses() {
+        return courses;
     }
 
     @Override

@@ -9,7 +9,7 @@ import org.verigo.server.data.repositories.CategoryRepository;
 
 
 @Component
-@Order(5)
+@Order(4)
 public class CategoryLoader implements CommandLineRunner {
     private final CategoryRepository repository;
 
